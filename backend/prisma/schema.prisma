@@ -1,0 +1,115 @@
+// ================================================
+// SCHEMA.PRISMA - SISTEMA AEROCODE
+// Local: backend/prisma/schema.prisma
+// ================================================
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ================================================
+// TABELA 1: USER
+// Login fixo: admin@aerocode.com / admin123
+// ================================================
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+// ================================================
+// TABELA 2: PROJECT (Aeronaves)
+// - Dashboard busca dados daqui
+// - progress = Taxa de Conclusao
+// - efficiency = Eficiencia Operacional
+// - alerts = Alertas Ativos
+// ================================================
+model Project {
+  id            Int        @id @default(autoincrement())
+  name          String
+  model         String
+  deadline      DateTime
+  progress      Int        @default(0)
+  efficiency    Int        @default(0)
+  alerts        Int        @default(0)
+  image         String     @db.Text // Adicionado: URL da imagem da aeronave
+  queuePosition Int
+  canEdit       Boolean    @default(false)
+  currentStage  Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  stages        Stage[]
+  activities    Activity[]
+}
+
+// ================================================
+// TABELA 3: STAGE (5 etapas por projeto)
+// Fuselagem, Asas, Motores, Sistemas, Testes
+// ================================================
+model Stage {
+  id          Int       @id @default(autoincrement())
+  projectId   Int
+  name        String
+  order       Int       // Adicionado: Ordem da etapa (0 a 4)
+  completed   Boolean   @default(false)
+  completedAt DateTime? // Adicionado: Data de conclusão da etapa
+  createdAt   DateTime  @default(now())
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// ================================================
+// TABELA 4: ACTIVITY (Log de atividades)
+// Aparece no Dashboard - Atividades Recentes
+// ================================================
+model Activity {
+  id          Int      @id @default(autoincrement())
+  projectId   Int
+  description String   @db.Text
+  type        String   // Ex: 'creation', 'progress', 'completion', 'alert'
+  createdAt   DateTime @default(now())
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// ================================================
+// TABELA 5: RESOURCE (Recursos)
+// CRUD completo na pagina Resources
+// Tipos: Material, Fornecedor, Equipe, Equipamento
+// ================================================
+model Resource {
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String    // Ex: 'Material', 'Fornecedor', 'Equipe', 'Equipamento'
+  quantity    Int?      // Opcional para Fornecedor/Equipe/Equipamento
+  unit        String?   // Ex: 'un', 'kg', 'm'
+  status      String    @default("available") // Ex: 'available', 'unavailable', 'active', 'on_leave', 'operational', 'maintenance'
+  location    String?   // Opcional para Material/Equipamento
+  description String?   @db.Text // Opcional
+  contact     String?   // Opcional para Fornecedor/Equipe
+  rating      Int?      // Opcional para Fornecedor (0-5 estrelas)
+  role        String?   // Opcional para Equipe (Ex: 'Engenheiro', 'Técnico')
+  projects    Int?      // Opcional para Equipe (número de projetos alocados)
+  maintenance DateTime? // Opcional para Equipamento (próxima manutenção)
+  usage       Int?      // Opcional para Equipamento (percentual de uso)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ================================================
+// TABELA 6: DASHBOARD_SNAPSHOT (Histórico)
+// Salva snapshots das métricas do dashboard
+// ================================================
+model DashboardSnapshot {
+  id              Int      @id @default(autoincrement())
+  totalProjects   Int      // Total de aeronaves no momento
+  avgCompletion   Int      // Taxa média de conclusão
+  avgEfficiency   Int      // Eficiência média
+  totalAlerts     Int      // Total de alertas ativos
+  date            DateTime @default(now()) // Data do snapshot
+  createdAt       DateTime @default(now())
+}
