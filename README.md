@@ -254,7 +254,7 @@ Antes de começar, você precisa ter instalado:
 
 ### 1️⃣ **Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/aerocode.git
+git clone https://github.com/carlosintrieri/AV3.git
 cd aerocode
 ```
 
