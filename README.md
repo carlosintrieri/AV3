@@ -400,22 +400,6 @@ Abra o navegador em: `http://localhost:3002`
 
 ---
 
-## 🎨 Screenshots
-
-### Dashboard
-![Dashboard](https://via.placeholder.com/800x450?text=Dashboard+Screenshot)
-
-### Lista de Projetos
-![Projetos](https://via.placeholder.com/800x450?text=Projects+Screenshot)
-
-### Detalhes da Produção
-![Detalhes](https://via.placeholder.com/800x450?text=Production+Details+Screenshot)
-
-### Gestão de Recursos
-![Recursos](https://via.placeholder.com/800x450?text=Resources+Screenshot)
-
----
-
 ## 🧪 Testes
 
 ### **Testar Backend**
