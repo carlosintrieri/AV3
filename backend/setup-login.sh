@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =====================================================
-# 🔥 SCRIPT ALL-IN-ONE - CONFIGURAR LOGIN AUTOMÁTICO
+#  SCRIPT ALL-IN-ONE - CONFIGURAR LOGIN AUTOMÁTICO
 # =====================================================
 # ARQUIVO: backend/setup-login.sh
 #
@@ -9,19 +9,19 @@
 # =====================================================
 
 echo ""
-echo "🔥 ================================================"
-echo "🔥 CONFIGURAÇÃO AUTOMÁTICA DE LOGIN"
-echo "🔥 ================================================"
+echo " ================================================"
+echo " CONFIGURAÇÃO AUTOMÁTICA DE LOGIN"
+echo " ================================================"
 echo ""
 
 # Vai para pasta backend
 cd "$(dirname "$0")"
 
-echo "📂 Pasta atual: $(pwd)"
+echo " Pasta atual: $(pwd)"
 echo ""
 
 # Instala dependências se necessário
-echo "📦 Verificando dependências..."
+echo " Verificando dependências..."
 if ! npm list bcrypt &> /dev/null; then
     echo "   Instalando bcrypt..."
     npm install bcrypt
@@ -43,24 +43,24 @@ echo "   ✅ Prisma Client gerado"
 echo ""
 
 # Sincroniza schema com banco
-echo "🗄️  Sincronizando schema com banco..."
+echo "  Sincronizando schema com banco..."
 npx prisma db push
 echo "   ✅ Schema sincronizado"
 echo ""
 
 # Executa setup de login
-echo "🔐 Criando usuário admin..."
+echo " Criando usuário admin..."
 npx ts-node src/setupLogin.ts
 
 echo ""
-echo "🎉 ================================================"
-echo "🎉 CONFIGURAÇÃO CONCLUÍDA!"
-echo "🎉 ================================================"
+echo " ================================================"
+echo "CONFIGURAÇÃO CONCLUÍDA!"
+echo " ================================================"
 echo ""
-echo "🚀 Próximos passos:"
+echo " Próximos passos:"
 echo "   1. Inicie o backend: npm run dev"
 echo "   2. Acesse: http://localhost:3000"
 echo "   3. Login com:"
-echo "      📧 Email: admin@aerocode.com"
-echo "      🔒 Senha: admin123"
+echo "      Email: admin@aerocode.com"
+echo "      Senha: admin123"
 echo ""
