@@ -187,12 +187,12 @@ export const getProjectById = async (req: Request, res: Response) => {
 
 export const createProject = async (req: Request, res: Response) => {
     try {
-        console.log('📥 Recebendo novo projeto:', req.body);
+        console.log(' Recebendo novo projeto:', req.body);
 
         const { name, model, deadline, efficiency, alerts } = req.body;
 
         if (!name || !model || !deadline) {
-            console.log('⚠️ Dados incompletos');
+            console.log(' Dados incompletos');
             return res.status(400).json({ message: 'Nome, modelo e prazo são obrigatórios' });
         }
 
@@ -209,7 +209,7 @@ export const createProject = async (req: Request, res: Response) => {
         const canEdit = !editableProject;
         const image = aircraftImages[Math.floor(Math.random() * aircraftImages.length)];
 
-        console.log('📝 Criando projeto no banco...');
+        console.log(' Criando projeto no banco...');
 
         const project = await prisma.project.create({
             data: {
@@ -292,7 +292,7 @@ export const advanceStage = async (req: Request, res: Response) => {
         const { id } = req.params;
         const projectId = parseInt(id);
 
-        console.log(`📈 Avançando etapa do projeto ${projectId}`);
+        console.log(` Avançando etapa do projeto ${projectId}`);
 
         const project = await prisma.project.findUnique({
             where: { id: projectId },
@@ -350,7 +350,7 @@ export const advanceStage = async (req: Request, res: Response) => {
 
         //  SE FOR A ÚLTIMA ETAPA, LIBERA A PRÓXIMA AERONAVE DA FILA
         if (isLastStage) {
-            console.log(`🏁 Projeto ${project.name} concluído! Liberando próxima aeronave...`);
+            console.log(` Projeto ${project.name} concluído! Liberando próxima aeronave...`);
 
             const nextProject = await prisma.project.findFirst({
                 where: {
@@ -392,7 +392,7 @@ export const completeProject = async (req: Request, res: Response) => {
         const { id } = req.params;
         const projectId = parseInt(id);
 
-        console.log(`🏁 Concluindo projeto ${projectId}`);
+        console.log(` Concluindo projeto ${projectId}`);
 
         const project = await prisma.project.findUnique({
             where: { id: projectId },
@@ -446,7 +446,7 @@ export const completeProject = async (req: Request, res: Response) => {
                 },
             });
 
-            console.log(`🔓 Próxima aeronave liberada: ${nextProject.name}`);
+            console.log(` Próxima aeronave liberada: ${nextProject.name}`);
         }
 
         await prisma.activity.create({
@@ -544,7 +544,7 @@ export const getChartData = async (req: Request, res: Response) => {
             progress: project.progress
         }));
 
-        console.log('📊 Dados do gráfico de linha:', chartData);
+        console.log(' Dados do gráfico de linha:', chartData);
 
         res.json(chartData);
     } catch (error) {
@@ -639,12 +639,12 @@ export const createResource = async (req: Request, res: Response) => {
             status,
             location,
             description,
-            contact,      // 📧 Email do fornecedor
-            rating,       // ⭐ Avaliação 1-5
-            role,         // 👔 Função da equipe
-            projects,     // 📊 Número de projetos
-            maintenance,  // 📅 Data da manutenção
-            usage         // ⚡ Porcentagem de uso
+            contact,
+            rating,
+            role,
+            projects,
+            maintenance,
+            usage
         } = req.body;
 
         if (!name || !type) {
@@ -671,7 +671,7 @@ export const createResource = async (req: Request, res: Response) => {
                 ...(unit && { unit }),
                 ...(location && { location }),
                 ...(description && { description }),
-                // 🔥 CAMPOS ESPECÍFICOS - GARANTIDO QUE SALVA
+                //  CAMPOS ESPECÍFICOS - GARANTIDO QUE SALVA
                 ...(contact && { contact: String(contact) }),
                 ...(rating !== undefined && rating !== null && { rating: parseInt(String(rating)) }),
                 ...(role && { role: String(role) }),
@@ -712,12 +712,12 @@ export const updateResource = async (req: Request, res: Response) => {
             status,
             location,
             description,
-            contact,      // 📧 Email
-            rating,       // ⭐ Estrelas
-            role,         // 👔 Função
-            projects,     // 📊 Projetos
-            maintenance,  // 📅 Manutenção
-            usage         // ⚡ Uso
+            contact,      // Email
+            rating,       // Estrelas
+            role,         // Função
+            projects,     // Projetos
+            maintenance,  // Manutenção
+            usage         //  Uso
         } = req.body;
 
         console.log('📝 ATUALIZANDO RECURSO ID:', id);
@@ -738,7 +738,7 @@ export const updateResource = async (req: Request, res: Response) => {
                 ...(status && { status }),
                 ...(location !== undefined && { location }),
                 ...(description !== undefined && { description }),
-                // 🔥 ATUALIZAR CAMPOS ESPECÍFICOS - GARANTIDO
+                // ATUALIZAR CAMPOS ESPECÍFICOS 
                 ...(contact !== undefined && { contact: contact || null }),
                 ...(rating !== undefined && { rating: rating === null ? null : parseInt(String(rating)) }),
                 ...(role !== undefined && { role: role || null }),
@@ -904,7 +904,7 @@ export const saveDashboardSnapshot = async (req: Request, res: Response) => {
             },
         });
 
-        console.log('📸 Snapshot do Dashboard salvo:', snapshot.id);
+        console.log('Snapshot do Dashboard salvo:', snapshot.id);
 
         res.json({
             message: 'Snapshot salvo com sucesso!',
@@ -974,7 +974,7 @@ export const cleanOldSnapshots = async (req: Request, res: Response) => {
             },
         });
 
-        console.log(`🗑️ ${result.count} snapshots antigos deletados`);
+        console.log(` ${result.count} snapshots antigos deletados`);
 
         res.json({
             message: `${result.count} snapshots antigos deletados`,
@@ -992,15 +992,15 @@ export const cleanOldSnapshots = async (req: Request, res: Response) => {
 // =====================================================
 export const login = async (req: Request, res: Response) => {
     console.log('');
-    console.log('🔐 ========================================');
-    console.log('🔐 REQUISIÇÃO DE LOGIN RECEBIDA');
-    console.log('🔐 ========================================');
+    console.log('========================================');
+    console.log(' REQUISIÇÃO DE LOGIN RECEBIDA');
+    console.log(' ========================================');
 
     try {
         const { email, password } = req.body;
 
         // LOG 1: Dados recebidos
-        console.log('📥 DADOS RECEBIDOS:');
+        console.log(' DADOS RECEBIDOS:');
         console.log('   Email:', email);
         console.log('   Senha:', password ? '***' + password.substring(3) : 'VAZIA');
         console.log('');
@@ -1080,11 +1080,6 @@ export const login = async (req: Request, res: Response) => {
         });
     }
 };
-
-
-
-
-
 
 
 
