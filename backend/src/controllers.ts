@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from './database';
-
+import bcrypt from 'bcrypt';
 const STAGE_NAMES = ['Fuselagem', 'Asas', 'Motores', 'Sistemas', 'Testes'];
 
 const aircraftImages = [
@@ -985,3 +985,116 @@ export const cleanOldSnapshots = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Erro ao limpar snapshots' });
     }
 };
+
+
+// =====================================================
+// LOGIN DO USUÁRIO
+// =====================================================
+export const login = async (req: Request, res: Response) => {
+    console.log('');
+    console.log('🔐 ========================================');
+    console.log('🔐 REQUISIÇÃO DE LOGIN RECEBIDA');
+    console.log('🔐 ========================================');
+
+    try {
+        const { email, password } = req.body;
+
+        // LOG 1: Dados recebidos
+        console.log('📥 DADOS RECEBIDOS:');
+        console.log('   Email:', email);
+        console.log('   Senha:', password ? '***' + password.substring(3) : 'VAZIA');
+        console.log('');
+
+        // Validação básica
+        if (!email || !password) {
+            console.log('❌ ERRO: Email ou senha não fornecidos');
+            console.log('');
+            return res.status(400).json({
+                error: 'Email e senha são obrigatórios'
+            });
+        }
+
+        // LOG 2: Buscando usuário
+        console.log('🔍 BUSCANDO USUÁRIO NO BANCO...');
+        console.log('   Email procurado:', email);
+
+        const user = await prisma.user.findUnique({
+            where: { email: email }
+        });
+
+        // LOG 3: Resultado da busca
+        if (!user) {
+            console.log('❌ USUÁRIO NÃO ENCONTRADO');
+            console.log('   Email não existe no banco:', email);
+            console.log('');
+            return res.status(401).json({
+                error: 'Email ou senha incorretos'
+            });
+        }
+
+        console.log('✅ USUÁRIO ENCONTRADO:');
+        console.log('   ID:', user.id);
+        console.log('   Email:', user.email);
+        console.log('   Nome:', user.name);
+        console.log('   Hash no banco:', user.password.substring(0, 30) + '...');
+        console.log('');
+
+        // LOG 4: Validando senha
+        console.log('🔐 VALIDANDO SENHA...');
+        console.log('   Senha recebida:', password);
+        console.log('   Hash no banco:', user.password.substring(0, 30) + '...');
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        console.log('   Resultado da comparação:', isPasswordValid ? '✅ VÁLIDA' : '❌ INVÁLIDA');
+        console.log('');
+
+        if (!isPasswordValid) {
+            console.log('❌ SENHA INCORRETA');
+            console.log('');
+            return res.status(401).json({
+                error: 'Email ou senha incorretos'
+            });
+        }
+
+        // LOG 5: Login bem-sucedido
+        console.log('✅ ========================================');
+        console.log('✅ LOGIN BEM-SUCEDIDO!');
+        console.log('✅ ========================================');
+        console.log('');
+
+        // Retorna usuário sem senha
+        const { password: _, ...userWithoutPassword } = user;
+
+        return res.json({
+            message: 'Login realizado com sucesso',
+            user: userWithoutPassword
+        });
+
+    } catch (error) {
+        console.error('');
+        console.error('❌ ERRO NO LOGIN:', error);
+        console.error('');
+        return res.status(500).json({
+            error: 'Erro ao fazer login'
+        });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
