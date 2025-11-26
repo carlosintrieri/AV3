@@ -1,9 +1,3 @@
-// =====================================================
-// 🌱 SEED 100% GARANTIDO
-// =====================================================
-// ARQUIVO: backend/src/seed.ts
-// =====================================================
-
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
