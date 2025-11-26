@@ -471,7 +471,7 @@ Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) par
 - [Prisma](https://www.prisma.io/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Recharts](https://recharts.org/)
-- [Emojipedia](https://emojipedia.org/) - Atulizado para encontrar Emojis usados na aplicação.
+- [Emojipedia](https://emojipedia.org/) - Atualizado para encontrar Emojis usados na aplicação.
 
 ---
 
