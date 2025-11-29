@@ -315,7 +315,7 @@ npm install recharts
 
 ### 6️⃣ **Iniciar o Frontend**
 ```bash
-npm run dev
+npm start
 ```
 
 O frontend estará rodando em: `http://localhost:3002`
